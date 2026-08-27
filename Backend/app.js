@@ -12,6 +12,14 @@ const rideRoutes = require('./routes/ride.routes');
 
 connectToDb();
 
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'https://uber-clone-frontend-git-main-quick-stack1.vercel.app/' // Tera Vercel Frontend URL
+    ],
+    credentials: true
+}));
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
