@@ -12,20 +12,29 @@ const rideRoutes = require('./routes/ride.routes');
 
 connectToDb();
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://uber-clone-frontend-git-main-quick-stack1.vercel.app'
+];
+
+// Single CORS middleware handles both standard requests AND preflight OPTIONS
 app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'https://uber-clone-frontend-git-main-quick-stack1.vercel.app/' // Tera Vercel Frontend URL
-    ],
-    credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-
 
 app.get('/', (req, res) => {
     res.send('Sagheer Abbas');
@@ -35,8 +44,5 @@ app.use('/users', userRoutes);
 app.use('/captains', captainRoutes);
 app.use('/maps', mapsRoutes);
 app.use('/rides', rideRoutes);
-
-
-
 
 module.exports = app;

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserDataContext } from '../context/UserContext'
 import axios from 'axios'
@@ -19,10 +19,14 @@ const UserLogin = () => {
     }
 
     try {
+      // Fallback base URL protects against undefined env variables
+      const baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:4000';
+
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/users/login`, 
+        `${baseUrl}/users/login`, 
         userData,
         {
+          headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         }
       )
@@ -34,8 +38,14 @@ const UserLogin = () => {
         navigate('/home')
       }
     } catch (error) {
-      console.error("User Login Error:", error.response?.data?.message || error.message);
-      alert(error.response?.data?.message || "Invalid credentials or unauthorized login attempt.");
+      console.error("User Login Error:", error.response?.data || error.message);
+      
+      const errorMessage = 
+        error.response?.data?.message || 
+        error.response?.data?.errors?.[0]?.msg || 
+        "Network error: Unable to reach the backend server.";
+
+      alert(errorMessage);
     }
 
     setEmail('')
@@ -47,40 +57,35 @@ const UserLogin = () => {
       <div>
         <img className='w-16 mb-10' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s" alt="" />
 
-        <form onSubmit={(e) => {
-          submitHandler(e)
-        }}>
+        <form onSubmit={submitHandler}>
           <h3 className='text-lg font-medium mb-2'>What's your email</h3>
           <input
             required
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value)
-            }}
+            onChange={(e) => setEmail(e.target.value)}
             className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
             type="email"
             placeholder='email@example.com'
           />
 
           <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
-
           <input
             className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value)
-            }}
-            required type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            required 
+            type="password"
             placeholder='password'
           />
 
           <button
             className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
           >Login</button>
-
         </form>
+
         <p className='text-center'>New here? <Link to='/signup' className='text-blue-600'>Create new Account</Link></p>
       </div>
+
       <div>
         <Link
           to='/captain-login'
