@@ -14,7 +14,6 @@ connectToDb();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'http://localhost:3000',
   'https://uber-clone-frontend-git-main-quick-stack1.vercel.app'
 ];
 
