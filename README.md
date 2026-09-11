@@ -1,4 +1,4 @@
-# Uber Clone - Full-Stack Ride-Hailing Platform 🚕
+# This Uber Clone - Full-Stack Ride-Hailing Platforms
 
 A production-ready, full-stack Uber clone built using the **MERN** stack. This application features real-time location tracking, dynamic fare calculation, instant driver-rider matching via WebSockets, interactive live maps, and OTP-authenticated ride verification.
 
